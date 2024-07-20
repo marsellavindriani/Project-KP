@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classification of Infant Heart Abnormalities</title>
+    <link rel="icon" type="image/x-icon" href="static\favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="static/css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>CardioWatch Infant</h1>
+        <p>Klasifikasi abnormalitas jantung anak dengan cepat dan lengkap!</p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="fileInput" class="form-label">Upload Gambar/Video</label>
+                <input class="form-control" type="file" id="fileInput" accept="image/*,video/*" multiple>
+            </div>
+            <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
+        </form>
+    </div>
+
+    <script src="static\js\script.js"></script>
+    <script src="static\js\bootstrap.bundle.js"></script>
+</body>
+</html>
