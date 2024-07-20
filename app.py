@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, send_from_directory, jsonify
 
 app = Flask(__name__)
 model = YOLO("best.pt")
+model.fuse()
+
 names = {0: 'Abnormal', 1: 'Normal'}
 UPLOAD_FOLDER = 'temp-media'
 
