@@ -44,7 +44,7 @@ def processVideo(path):
         processedFrame += 1
         print(f"\r{processedFrame}/{totalFrames} Frames", end='')
 
-        results = model(frame, verbose=False)
+        results = model(frame, verbose=False, save=False)
         if names[results[0].probs.top1] == 'Normal':
             normal += 1
         else:
@@ -67,7 +67,7 @@ def processImage(path):
     namaFile = os.path.basename(path)
     print(f"\nSedang Memproses {namaFile}", end='')
     frame = cv2.imread(path)
-    results = model(frame, verbose=False)
+    results = model(frame, verbose=False, save=False)
 
     return results[0].probs.top1, results[0].probs.data.cpu().numpy()
 
