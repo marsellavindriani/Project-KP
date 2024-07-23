@@ -1,12 +1,32 @@
 import os
 import cv2
+import torch
+import ultralytics
 from ultralytics import YOLO
 from moviepy.editor import VideoFileClip
 from flask import Flask, render_template, request, send_from_directory, jsonify
 
 app = Flask(__name__)
-model = YOLO("best.pt")
-model.fuse()
+model = None
+
+def loadModel(pilihanUser):
+    global model
+    deviceName = "cpu"
+    if pilihanUser is None:
+        if torch.cuda.is_available():
+            os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+            print("Prediksi Menggunakan CUDA!")
+            deviceName = "0"
+        else:
+            print("Prediksi Menggunakan CPU!")
+        model = YOLO(r"models\default\best.pt")
+    else:
+        print(f"Prediksi Menggunakan CUDA: {pilihanUser}")
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(pilihanUser)
+        model = YOLO(r"models\default\best.pt")
+        deviceName = str(pilihanUser)
+    model.fuse()
+    ultralytics.checks(device=deviceName)
 
 names = {0: 'Abnormal', 1: 'Normal'}
 UPLOAD_FOLDER = 'temp-media'
@@ -155,4 +175,5 @@ def delete_files():
 
 
 if __name__ == '__main__':
+    loadModel(0)
     app.run(debug=True)

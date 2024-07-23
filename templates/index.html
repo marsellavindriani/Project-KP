@@ -3,11 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>Classification of Infant Heart Abnormalities</title>
-    <link rel="icon" type="image/x-icon" href="static\favicon.ico">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="static/css/style.css">
     <link href="static/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        /* CSS for the info button and the dropdown info box */
+        .info-button {
+            position: absolute; /* Positioning the button */
+            top: 20px;
+            right: 20px;
+            background-color: #007bff; /* Bootstrap primary blue color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-box {
+            position: absolute;
+            top: 60px; /* Position below the button */
+            right: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: none; /* Initially hidden */
+            z-index: 1000; /* Make sure it's above other elements */
+            width: 250px; /* Fixed width for the info box */
+        }
+
+        .info-box h3 {
+            margin-top: 0; /* Remove top margin for heading */
+            font-size: 16px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* Optional: Close button for the info box */
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -21,9 +75,36 @@
             </div>
             <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
         </form>
+
+        <div id="fileList" class="mt-3"></div>
+    </div>
+    
+    <!-- Info Button -->
+    <button class="info-button" onclick="toggleInfoBox()">Info</button>
+    
+    <!-- Info Box -->
+    <div class="info-box" id="infoBox">
+        <button class="close-btn" onclick="toggleInfoBox()">✕</button>
+        <h3>Info Page</h3>
+        <p><strong>Device:</strong> <span id="device">N/A</span></p>
+        <p><strong>Model Path:</strong> <span id="modelPath">N/A</span></p>
+        <p><strong>Model Input:</strong> <span id="modelInput">N/A</span></p>
     </div>
 
-    <script src="static\js\script.js"></script>
-    <script src="static\js\bootstrap.bundle.js"></script>
+    <script src="static/js/script.js"></script>
+    <script src="static/js/bootstrap.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        // Function to toggle the display of the info box
+        function toggleInfoBox() {
+            const infoBox = document.getElementById('infoBox');
+            infoBox.style.display = infoBox.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Sample JavaScript to dynamically update the info box
+        document.getElementById('device').textContent = 'Device Name'; // Replace 'Device Name' with actual device info
+        document.getElementById('modelPath').textContent = 'Path/To/Model'; // Replace with actual model path
+        document.getElementById('modelInput').textContent = 'Input Information'; // Replace with actual model input
+    </script>
 </body>
 </html>
