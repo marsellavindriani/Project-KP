@@ -9,45 +9,45 @@
     <link href="static/css/bootstrap.css" rel="stylesheet" />
     <style>
         /* CSS for the info button and the dropdown info box */
-        .info-button {
-            position: absolute; /* Positioning the button */
+        /* .info-button {
+            position: absolute; 
             top: 20px;
             right: 20px;
-            background-color: #007bff; /* Bootstrap primary blue color */
+            background-color: #007bff; 
             color: white;
             border: none;
             border-radius: 5px;
             padding: 10px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+        } */
 
-        .info-box {
+        /* .info-box {
             position: absolute;
-            top: 60px; /* Position below the button */
+            top: 60px; 
             right: 20px;
             background-color: #f8f9fa;
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 15px;
-            display: none; /* Initially hidden */
-            z-index: 1000; /* Make sure it's above other elements */
-            width: 250px; /* Fixed width for the info box */
-        }
+            display: none; 
+            z-index: 1000; 
+            width: 250px; 
+        } */
 
-        .info-box h3 {
-            margin-top: 0; /* Remove top margin for heading */
+        /* .info-box h3 {
+            margin-top: 0; 
             font-size: 16px;
         }
 
         .info-box p {
             margin: 5px 0;
             font-size: 14px;
-        }
+        } */
 
         /* Optional: Close button for the info box */
-        .close-btn {
+        /* .close-btn {
             position: absolute;
             top: 5px;
             right: 5px;
@@ -60,10 +60,100 @@
 
         .close-btn:hover {
             color: #333;
+        } */
+
+        .callout {
+            border-left: 4px solid #007bff; /* Bootstrap primary blue */
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .callout h4 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .callout p {
+            margin-bottom: 0;
+        }
+
+        .info-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
     </style>
 </head>
 <body>
+    <div class="container mt-5">
+        <div class="callout" id="deviceInfo">
+            <h4>Device Information</h4>
+            <p><strong>Device:</strong> <span id="deviceName">Loading...</span></p>
+            <p><strong>Model Path:</strong> <span id="modelPath">Loading...</span></p>
+            <p><strong>Model Input:</strong> <span id="modelInput">Loading...</span></p>
+        </div>
+        <div class="form-group mt-4">
+            <label for="deviceChoice">Select Device (GPU):</label>
+            <select id="deviceChoice" class="form-control" onchange="loadModel()">
+                <option value="null">Auto CPU</option>
+                <option value="0">CUDA 0</option>
+                <option value="1">CUDA 1</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript function to mimic loadModel function behavior
+        function loadModel() {
+            const choiceUser = document.getElementById('deviceChoice').value;
+            let deviceName = "cpu";
+            let modelPath = "Default";
+            let modelInput = "Auto selection";
+
+            if (choiceUser === "null") {
+                if (isCudaAvailable()) {
+                    console.log("Prediction Using CUDA!");
+                    deviceName = "0";
+                } else {
+                    console.log("Prediction Using CPU!");
+                    deviceName = "cpu";
+                }
+            } else {
+                console.log(`Prediction Using CUDA: ${choiceUser}`);
+                deviceName = choiceUser;
+            }
+
+            // Update HTML content
+            document.getElementById('deviceName').textContent = deviceName === "cpu" ? "CPU" : `CUDA ${deviceName}`;
+            document.getElementById('modelPath').textContent = modelPath;
+            document.getElementById('modelInput').textContent = deviceName === "cpu" ? "Using CPU" : `Using CUDA on GPU: ${deviceName}`;
+        }
+
+        // Simulate CUDA availability (for demonstration purposes)
+        function isCudaAvailable() {
+            // Simulate CUDA availability for demonstration purposes
+            return Math.random() > 0.5; // Randomly simulate CUDA being available
+        }
+
+        // Initial load
+        loadModel();
+    </script>
     <div class="container mt-5">
         <h1>CardioWatch Infant</h1>
         <p>Klasifikasi abnormalitas jantung anak dengan cepat dan lengkap!</p>
@@ -80,16 +170,16 @@
     </div>
     
     <!-- Info Button -->
-    <button class="info-button" onclick="toggleInfoBox()">Info</button>
+    <!-- <button class="info-button" onclick="toggleInfoBox()">Info</button> -->
     
     <!-- Info Box -->
-    <div class="info-box" id="infoBox">
+    <!-- <div class="info-box" id="infoBox">
         <button class="close-btn" onclick="toggleInfoBox()">✕</button>
         <h3>Info Page</h3>
         <p><strong>Device:</strong> <span id="device">N/A</span></p>
         <p><strong>Model Path:</strong> <span id="modelPath">N/A</span></p>
         <p><strong>Model Input:</strong> <span id="modelInput">N/A</span></p>
-    </div>
+    </div> -->
 
     <script src="static/js/script.js"></script>
     <script src="static/js/bootstrap.bundle.js"></script>
@@ -102,9 +192,97 @@
         }
 
         // Sample JavaScript to dynamically update the info box
-        document.getElementById('device').textContent = 'Device Name'; // Replace 'Device Name' with actual device info
-        document.getElementById('modelPath').textContent = 'Path/To/Model'; // Replace with actual model path
-        document.getElementById('modelInput').textContent = 'Input Information'; // Replace with actual model input
+        // document.getElementById('device').textContent = 'Device Name'; 
+        // document.getElementById('modelPath').textContent = 'Path/To/Model'; 
+        // document.getElementById('modelInput').textContent = 'Input Information';
+        <div class="container mt-5">
+        <!-- Info Button -->
+        <button class="info-button" data-bs-toggle="modal" data-bs-target="#infoModal">
+        Show Device Info
+        </button>
+        
+        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">Device and Model Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Device Used:</strong> <span id="deviceInfo">Loading...</span></p>
+                        <p><strong>Input Model:</strong> <span id="modelPathInfo">Loading...</span></p>
+                    <div class="mb-3">
+                        <label for="modelInput" class="form-label"><strong>Upload Model (.pt):</strong></label>
+                        <input type="file" class="form-control" id="modelInput" accept=".pt"/>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        // JavaScript function to load model information
+        function loadModelInfo(choiceUser = null, modelPath = "models/default/best.pt") {
+            let deviceName = "cpu"; // Default device name
+
+            if (choiceUser === null) {
+                if (isCudaAvailable()) {
+                    console.log("Prediction Using CUDA!");
+                    deviceName = "0";
+                } else {
+                    console.log("Prediction Using CPU!");
+                    deviceName = "cpu";
+                }
+            } else {
+                console.log(`Prediction Using CUDA: ${choiceUser}`);
+                deviceName = choiceUser;
+            }
+// Simulate model loading
+const modelLoaded = simulateModelLoading(modelPath);
+
+// Update modal content
+document.getElementById('deviceInfo').textContent = deviceName === "cpu" ? "CPU" : `GPU ${deviceName}`;
+document.getElementById('modelPathInfo').textContent = modelLoaded ? modelPath : "Failed to load model";
+}
+
+// Simulate CUDA availability check
+function isCudaAvailable() {
+return Math.random() > 0.5; // Randomly simulate CUDA being available
+}
+
+// Simulate model loading and return success or failure
+function simulateModelLoading(modelPath) {
+try {
+    // Simulate loading a model file (e.g., using AJAX or API call in a real scenario)
+    console.log(`Model successfully loaded from ${modelPath}`);
+    return true;
+} catch (e) {
+    console.log(`Failed to load model from ${modelPath}: ${e}`);
+    return false;
+}
+}
+
+// Initial model info load
+loadModelInfo();
+        
+        // JavaScript to update the model path info when a file is selected
+        document.getElementById('modelInput').addEventListener('change', function(event) {
+            const fileName = event.target.files[0] ? event.target.files[0].name : 'No file selected';
+            document.getElementById('modelPathInfo').innerText = fileName;
+        });
+
+        // Example JavaScript to load device information
+        document.addEventListener('DOMContentLoaded', () => {
+            const deviceInfoElement = document.getElementById('deviceInfo');
+            // Simulate fetching device information
+            deviceInfoElement.innerText = 'Device Model XYZ'; // Replace this with actual device information
+        });
+
+
+
     </script>
 </body>
 </html>

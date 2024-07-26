@@ -158,6 +158,7 @@ def index():
     return render_template('index.html')
 
 
+
 @app.route('/upload', methods=['POST'])
 def upload_files():
     if 'files' not in request.files:
@@ -174,6 +175,7 @@ def upload_files():
 
     print(f"Files {paths} berhasil diupload")
     results = get_prediction(paths)
+    print(results)
     return render_template('result.html', results=results)
 
 

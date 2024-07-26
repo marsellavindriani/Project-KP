@@ -140,22 +140,24 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch('/upload', {
                 method: 'POST',
                 body: formData
-            }).then(response => response.text())
+            }).then(response => { 
+            //     showAlert({
+            //     title: 'Upload Successful!',
+            //     text: 'Your files have been successfully uploaded.',
+            //     icon: 'success',
+            //     showConfirmButton: true,
+            //     backdrop: `
+            //         rgba(0,0,123,0.4)
+            //         left top
+            //         no-repeat
+            //     `
+            // });
+            return response.text()})
             .then(data => {
                 document.body.innerHTML = data;
             }).catch(error => console.error('Error:', error));
 
-            showAlert({
-                title: 'Upload Successful!',
-                text: 'Your files have been successfully uploaded.',
-                icon: 'success',
-                showConfirmButton: true,
-                backdrop: `
-                    rgba(0,0,123,0.4)
-                    left top
-                    no-repeat
-                `
-            });
+           
         }
     });
 });

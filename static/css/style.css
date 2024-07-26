@@ -1,4 +1,4 @@
-body, html {
+/* body, html {
     height: 100%;
     margin: 0;
     display: flex;
@@ -9,4 +9,212 @@ body, html {
 .container {
     width: 50%;
     margin: auto;
+} */
+
+/* Base styles */
+body {
+    background: rgb(253,29,29) !important;
+background: linear-gradient(90deg, rgba(253,29,29,1) 0%, rgba(252,176,69,1) 100%) !important;
+    color: #000000; /* Dark text for readability */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Terracotta color for primary elements */
+h1, h2, h3, h4, h5, h6 {
+    color: #f6f6f6; /* Terracotta color for headings */
+}
+
+p {
+    color: #000000; /* Slightly lighter text color for paragraphs */
+    line-height: 1.6;
+}
+
+/* Buttons with terracotta theme */
+button, .btn {
+    background-color: #E2725B;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #CC4D3D; /* Darker terracotta on hover */
+}
+
+/* Modal styles */
+.modal-content {
+    background-color: #ffffff; /* White for modal background */
+    border: 1px solid #E2725B; /* Terracotta border */
+}
+
+.modal-header, .modal-footer {
+    background-color: #f5f5f5; /* Light terracotta for header/footer */
+    color: #fffcfc;
+    border-bottom: 1px solid #E2725B; /* Terracotta line for separation */
+}
+
+.modal-title {
+    color: #CC4D3D; /* Dark Terracotta for modal title */
+}
+
+.modal-body {
+    color: #be0000;
+}
+
+/* File input styling */
+input[type="file"] {
+    border: 1px solid #fdfdfd; /* Sand color border */
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+input[type="file"]:hover {
+    border-color: #E2725B; /* Terracotta color on hover */
+}
+
+/* Links with terracotta color */
+a {
+    color: #E2725B;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #CC4D3D; /* Darker terracotta on hover */
+}
+
+/* General layout for container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header and navigation */
+header {
+    background-color: #E2725B; /* Terracotta background */
+    color: #FFFFFF;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav a {
+    color: #FFFFFF;
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #CC4D3D; /* Darker terracotta on hover */
+}
+
+/* Footer */
+footer {
+    background-color: #CC4D3D; /* Dark terracotta for footer */
+    color: #FFFFFF;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 20px;
+}
+
+/* Cards and other components */
+.card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2725B; /* Terracotta border */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #ffffff; /* Light terracotta */
+    color: #fff1f1;
+    padding: 10px 15px;
+    border-bottom: 1px solid #E2725B;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+/* Form elements */
+input[type="text"], input[type="email"], textarea {
+    border: 1px solid #D9CAB3; /* Sand color border */
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #9ef10f;
+    color: #333333;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    border-color: #E2725B; /* Terracotta on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(226, 114, 91, 0.2);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: hsl(19, 100%, 64%); /* Background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #E2725B; /* Terracotta color for scrollbar */
+    border-radius: 5px;
+    border: 2px solid #9c6b00;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    header, footer {
+        padding: 15px;
+    }
+
+    nav a {
+        padding: 8px 10px;
+    }
+}
+
+.result-container {
+    display: flex;
+    gap: 4rem;
+}
+
+.result-figure {
+    width: 20rem;
+    height: auto;
+}
+
+.result-captions {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-file-name {
+    color: #000000;
+}
+
+.result {
+    overflow-y: scroll;
+    height: 30rem;
 }
