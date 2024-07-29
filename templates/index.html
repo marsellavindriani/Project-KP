@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Classification of Infant Heart Abnormalities</title>
     <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <img src="static\Logo isysrg-01.png" alt="Logo" class="logo">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="static/css/style.css">
     <link href="static/css/bootstrap.css" rel="stylesheet" />
@@ -105,53 +106,80 @@
         <div class="callout" id="deviceInfo">
             <h4>Device Information</h4>
             <p><strong>Device:</strong> <span id="deviceName">Loading...</span></p>
-            <p><strong>Model Path:</strong> <span id="modelPath">Loading...</span></p>
-            <p><strong>Model Input:</strong> <span id="modelInput">Loading...</span></p>
+            <p><strong>Model Name:</strong> <span id="modelPath">No file selected</span></p>
+            <p><strong>Input Model:</strong> <span id="modelInput">Loading...</span></p>
         </div>
         <div class="form-group mt-4">
             <label for="deviceChoice">Select Device (GPU):</label>
             <select id="deviceChoice" class="form-control" onchange="loadModel()">
-                <option value="null">Auto CPU</option>
-                <option value="0">CUDA 0</option>
-                <option value="1">CUDA 1</option>
+                <option value="null">CUDA 0</option>
+                <option value="0">CUDA 1</option>
+                <option value="1">CPU</option>
             </select>
+        </div>
+        <form id="modelUploadForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="modelFile" class="form-label">Upload Model (.pt)</label>
+                <input class="form-control" type="file" id="modelFile" accept=".pt" onchange="handleFileSelect(event)">
+            </div>
+            <button type="button" class="btn btn-primary" id="uploadButton" onclick="uploadModel()">Upload</button>
+        </form>
+    </div>
         </div>
     </div>
 
-    <script>
-        // JavaScript function to mimic loadModel function behavior
-        function loadModel() {
-            const choiceUser = document.getElementById('deviceChoice').value;
-            let deviceName = "cpu";
-            let modelPath = "Default";
-            let modelInput = "Auto selection";
 
-            if (choiceUser === "null") {
-                if (isCudaAvailable()) {
-                    console.log("Prediction Using CUDA!");
-                    deviceName = "0";
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deviceName = document.getElementById('deviceName');
+            const modelPath = document.getElementById('modelPath');
+            const modelInput = document.getElementById('modelInput');
+            const deviceChoice = document.getElementById('deviceChoice');
+
+            // Simulate loading device information
+            deviceName.textContent = "CUDA 0";
+            modelInput.textContent = "N/A";
+
+            // Handle model file selection
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    modelPath.textContent = file.name;
                 } else {
-                    console.log("Prediction Using CPU!");
-                    deviceName = "cpu";
+                    modelPath.textContent = "No file selected";
                 }
-            } else {
-                console.log(`Prediction Using CUDA: ${choiceUser}`);
-                deviceName = choiceUser;
             }
 
-            // Update HTML content
-            document.getElementById('deviceName').textContent = deviceName === "cpu" ? "CPU" : `CUDA ${deviceName}`;
-            document.getElementById('modelPath').textContent = modelPath;
-            document.getElementById('modelInput').textContent = deviceName === "cpu" ? "Using CPU" : `Using CUDA on GPU: ${deviceName}`;
-        }
+            // Handle model upload (dummy function for illustration)
+            function uploadModel() {
+                const fileInput = document.getElementById('modelFile');
+                const file = fileInput.files[0];
+                if (file) {
+                    alert(`Uploading model: ${file.name}`);
+                    // Here you would handle the actual upload process, e.g., sending the file to a server
+                    modelInput.textContent = "Model successfully uploaded!";
+                } else {
+                    alert("Please select a model file to upload.");
+                }
+            }
 
-        // Simulate CUDA availability (for demonstration purposes)
-        function isCudaAvailable() {
-            // Simulate CUDA availability for demonstration purposes
-            return Math.random() > 0.5; // Randomly simulate CUDA being available
-        }
+            // Assign functions to window scope for access
+            window.handleFileSelect = handleFileSelect;
+            window.uploadModel = uploadModel;
 
-        // Initial load
+            // Load model based on device choice (dummy function)
+            window.loadModel = function() {
+                const device = deviceChoice.value;
+                if (device === "null") {
+                    deviceName.textContent = "CUDA 0";
+                } else if (device === "0") {
+                    deviceName.textContent = "CUDA 1";
+                } else {
+                    deviceName.textContent = "CPU";
+                }
+            };
+        });
+
         loadModel();
     </script>
     <div class="container mt-5">
@@ -169,37 +197,13 @@
         <div id="fileList" class="mt-3"></div>
     </div>
     
-    <!-- Info Button -->
-    <!-- <button class="info-button" onclick="toggleInfoBox()">Info</button> -->
-    
-    <!-- Info Box -->
-    <!-- <div class="info-box" id="infoBox">
-        <button class="close-btn" onclick="toggleInfoBox()">✕</button>
-        <h3>Info Page</h3>
-        <p><strong>Device:</strong> <span id="device">N/A</span></p>
-        <p><strong>Model Path:</strong> <span id="modelPath">N/A</span></p>
-        <p><strong>Model Input:</strong> <span id="modelInput">N/A</span></p>
-    </div> -->
 
     <script src="static/js/script.js"></script>
     <script src="static/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
-        // Function to toggle the display of the info box
-        function toggleInfoBox() {
-            const infoBox = document.getElementById('infoBox');
-            infoBox.style.display = infoBox.style.display === 'none' ? 'block' : 'none';
-        }
 
-        // Sample JavaScript to dynamically update the info box
-        // document.getElementById('device').textContent = 'Device Name'; 
-        // document.getElementById('modelPath').textContent = 'Path/To/Model'; 
-        // document.getElementById('modelInput').textContent = 'Input Information';
-        <div class="container mt-5">
-        <!-- Info Button -->
-        <button class="info-button" data-bs-toggle="modal" data-bs-target="#infoModal">
-        Show Device Info
-        </button>
+
         
         <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -225,7 +229,7 @@
     </div>
 
         // JavaScript function to load model information
-        function loadModelInfo(choiceUser = null, modelPath = "models/default/best.pt") {
+        function loadModel(choiceUser = null, modelPath = "models/default/best.pt") {
             let deviceName = "cpu"; // Default device name
 
             if (choiceUser === null) {
@@ -266,7 +270,7 @@ try {
 }
 
 // Initial model info load
-loadModelInfo();
+loadModel();
         
         // JavaScript to update the model path info when a file is selected
         document.getElementById('modelInput').addEventListener('change', function(event) {

@@ -39,6 +39,8 @@ def loadModel(choiceUser=None, modelPath="models/default/best.pt"):
     global model
     deviceName = "cpu"  # Default to CPU
 
+    print(f"USINGG {choiceUser}")
+
     # Check for user choice or automatic device selection
     if choiceUser is None:
         if torch.cuda.is_available():
@@ -157,7 +159,12 @@ def get_prediction(paths):
 def index():
     return render_template('index.html')
 
-
+@app.route('/load-model/<choiceUser>')
+def load_model(choiceUser):
+    # return render_template('index.html')
+    choiceUser = None if choiceUser == "null" else choiceUser
+    loadModel(choiceUser)
+    
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
