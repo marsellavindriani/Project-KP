@@ -203,7 +203,7 @@ body {
 }
 
 .file-list-item {
-    border: 1px solid #ddd;
+    border: 5px solid #ddd;
     border-radius: 5px;
     padding: 10px;
     box-sizing: border-box;
@@ -252,3 +252,101 @@ body {
 .result-captions {
     margin-top: 10px;
 }
+
+/* Logo ISYSrg */
+header {
+    position: relative; /* Allows the logo to be positioned within the header */
+    width: 80%;
+    padding: 5px; /* Padding around the header content */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional shadow for the header */
+    background-color: #E41616; /* Background color for the header */
+}
+
+#logo {
+    position: absolute; /* Positions the logo absolutely within the header */
+    top: 15px; /* Distance from the top */
+    left: 20px; /* Distance from the left */
+    height: 90px; /* Set height for the logo */
+    width: 200px; /* Maintain aspect ratio */
+}
+
+/* Footer */
+ footer {
+            background-color: #222;
+            color: #ddd;
+            padding: 20px 0;
+        }
+
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .footer-column {
+            width: 50%;
+            margin: 10px 0;
+        }
+
+        .footer-column h4 {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column ul li {
+            margin: 5px 0;
+        }
+
+        .footer-column ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #ff9800;
+        }
+
+        .social-icons {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+
+        .social-icons li {
+            margin-right: 15px;
+        }
+
+        .social-icons a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #ff9800;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 20px;
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .footer-column {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
