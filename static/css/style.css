@@ -1,194 +1,254 @@
-body, html {
-    height: 80%;
+html, body {
+    overflow-y: auto;
+    height: 100%;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}  
+}
+
+body {
+    /* Set the gradient background with smooth transitions */
+    background: linear-gradient(to bottom, 
+        #E41616 0%, 
+        #F67618 33%, 
+        #FFAA2B 66%, 
+        #FFEB34 100%
+    );
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    position: relative;
+}
+
 .container {
-    width: 90%;
-    margin: auto;
-} */
-
-
-
-/* Terracotta color for primary elements */
-h1, h2, h3, h4, h5, h6 {
-    color: #000000; /* Terracotta color for headings */
+    color: white;
+    text-align: center;
 }
 
-p {
-    color: #000000; /* Slightly lighter text color for paragraphs */
-    line-height: 1.6;
+.form-label, .btn {
+    color: white;
 }
 
-/* Buttons with terracotta theme */
-button, .btn {
-    background-color: #E2725B;
-    color: #FFFFFF;
+.form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.configure-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #FFEB34;
+    color: #E41616;
     border: none;
+    border-radius: 15px;
     padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 1001;
+}
+
+.configure-button:hover {
+    background-color: #FFD700;
+}
+
+#configPopup {
+    display: none;
+    position: fixed;
+    top: calc(10px + 60px);
+    right: 10px;
+    background: white;
+    color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: 300px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+#configPopup h3 {
+    margin-top: 0;
+}
+
+#configPopup input[type="text"],
+#configPopup input[type="file"],
+#configPopup select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+#configPopup input[type="text"] {
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: not-allowed;
+}
+
+#configPopup button {
+    background-color: #FFEB34;
+    color: #E41616;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#configPopup button:hover {
+    background-color: #FFD700;
+}
+
+.blurred-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+    display: none;
+}
+
+.upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-container input[type="file"] {
+    margin-right: 10px;
+}
+
+.upload-button {
+    display: inline-block;
+}
+
+.upload-button:hover {
+    background-color: #FFD700;
+}
+
+.info-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.info-container div {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.info-container .info-title {
+    font-weight: bold;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #333;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.btn-upload {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-button:hover, .btn:hover {
-    background-color: #CC4D3D; /* Darker terracotta on hover */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
+    gap: 10px;
 }
 
-/* Modal styles */
-.modal-content {
-    background-color: #db9898; /* White for modal background */
-    border: 1px solid #f68069; /* Terracotta border */
-}
-
-.modal-header, .modal-footer {
-    background-color: #f5f5f5; /* Light terracotta for header/footer */
-    color: #fffcfc;
-    border-bottom: 1px solid #E2725B; /* Terracotta line for separation */
-}
-
-.modal-title {
-    color: #CC4D3D; /* Dark Terracotta for modal title */
-}
-
-.modal-body {
-    color: #be0000;
-}
-
-/* File input styling */
-input[type="file"] {
-    border: 1px solid #fdfdfd; /* Sand color border */
+.file-list-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
     padding: 10px;
-    border-radius: 5px;
-    background-color: #e3e3e3e5;
-    color: #17a4dc;
-    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    overflow: hidden;
+    color:rgb(21, 21, 21);
 }
 
-input[type="file"]:hover {
-    border-color: #131212; /* Terracotta color on hover */
+.file-preview {
+    max-width: 80%;
+    max-height: 800px;
+    object-fit: cover;
 }
 
-
-/* Header and navigation */
-header {
-    background-color: #E2725B; /* Terracotta background */
-    color: #FFFFFF;
-    padding: 10px 0;
-    text-align: center;
+.file-list-item img.file-preview {
+    width: 100%;
 }
 
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: hsl(19, 100%, 64%); /* Background color of the scrollbar track */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #E2725B; /* Terracotta color for scrollbar */
-    border-radius: 5px;
-    border: 2px solid #9c6b00;
-}
-
-/* Media queries for responsiveness */
-@media (max-width: 768px) {
-    header, footer {
-        padding: 15px;
-    }
-
-    nav a {
-        padding: 8px 10px;
-    }
+.list-group-item {
+    border-radius: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .result-container {
     display: flex;
-    gap: 4rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .result-figure {
-    width: 20rem;
-    height: auto;
+    max-width: 100%; /* Fit within the container */
+    max-height: 400px; /* Limit height for better display */
 }
 
-.result-captions {
+/* Center container if only one item */
+.single-media-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
-.result-file-name {
-    color: #000000;
-}
-
-.result {
-    overflow-y: scroll;
-    height: 32rem;
-}
-
-.logo {
-    position: fixed; /* Fixes the logo in the viewport */
-    top: 6px; /* Distance from the top */
-    left: 50%; /* Positions the left side of the logo at 50% of the viewport width */
-    transform: translateX(-50%); /* Moves the logo back to the center */
-    width: 120px; /* Sets the width of the logo */
-    height: 80px; /* Sets the height of the logo */
-    z-index: 1000; /* Ensures the logo stays on top of other elements */
-    border-radius: 0%; /* Makes it circular (optional) */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Adds shadow for better visibility */
-}
-
-
-
-.container {
-    margin-top: 50px;
-    padding: 20px;
-    max-width: 600px;
-    background-color: #eaeaea; /* White background for container */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    border-radius: 20px; /* Rounded corners */
-}
-
-.callout {
-    border-left: 4px solid #007bff; /* Blue left border */
-    padding-left: 10px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #ffffff;
-    margin-right: 10px;
-}
-
-.custom-file-upload:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
-.btn-upload {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-upload:hover {
-    background-color: #218838; /* Darker green on hover */
+/* Style captions */
+.result-captions {
+    margin-top: 10px;
 }

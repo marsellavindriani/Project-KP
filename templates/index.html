@@ -3,290 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Classification of Infant Heart Abnormalities</title>
-    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
-    <img src="static\Logo isysrg-01.png" alt="Logo" class="logo">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="static/css/style.css">
     <link href="static/css/bootstrap.css" rel="stylesheet" />
-    <style>
-        /* CSS for the info button and the dropdown info box */
-        /* .info-button {
-            position: absolute; 
-            top: 20px;
-            right: 20px;
-            background-color: #007bff; 
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        } */
 
-        /* .info-box {
-            position: absolute;
-            top: 60px; 
-            right: 20px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            display: none; 
-            z-index: 1000; 
-            width: 250px; 
-        } */
-
-        /* .info-box h3 {
-            margin-top: 0; 
-            font-size: 16px;
-        }
-
-        .info-box p {
-            margin: 5px 0;
-            font-size: 14px;
-        } */
-
-        /* Optional: Close button for the info box */
-        /* .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: #777;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        } */
-
-        .callout {
-            border-left: 4px solid #007bff; /* Bootstrap primary blue */
-            background-color: #f8f9fa;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .callout h4 {
-            margin-top: 0;
-            color: #007bff;
-        }
-        .callout p {
-            margin-bottom: 0;
-        }
-
-        .info-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-content {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="callout" id="deviceInfo">
-            <h4>Device Information</h4>
-            <p><strong>Device:</strong> <span id="deviceName">Loading...</span></p>
-            <p><strong>Model Name:</strong> <span id="modelPath">No file selected</span></p>
-            <p><strong>Input Model:</strong> <span id="modelInput">Loading...</span></p>
-        </div>
-        <div class="form-group mt-4">
-            <label for="deviceChoice">Select Device (GPU):</label>
-            <select id="deviceChoice" class="form-control" onchange="loadModel()">
-                <option value="null">CUDA 0</option>
-                <option value="0">CUDA 1</option>
-                <option value="1">CPU</option>
-            </select>
-        </div>
-        <form id="modelUploadForm" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="modelFile" class="form-label">Upload Model (.pt)</label>
-                <input class="form-control" type="file" id="modelFile" accept=".pt" onchange="handleFileSelect(event)">
+    <button class="configure-button" onclick="openConfigPopup()">Configure</button>
+    <div class="blurred-background" id="blurredBackground"></div>
+
+    <div id="configPopup">
+        <div>
+            <h3>Device Type</h3>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <select id="deviceSelect" name="device">
+                    <option value="cpu">CPU</option>
+                    {% for i in range(device_count) %}
+                    <option value="cuda:{{ i }}">CUDA:{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <button onclick="saveConfig()">Save</button>
             </div>
-            <button type="button" class="btn btn-primary" id="uploadButton" onclick="uploadModel()">Upload</button>
-        </form>
-    </div>
+        </div>                
+        <div>
+            <h3>Upload Model</h3>
+            <div class="upload-container">
+                <input type="file" id="modelFile" accept=".pt">
+                <button class="upload-button" onclick="uploadModel()">Upload</button>
+            </div>
         </div>
+        <div class="button-container">
+            <button onclick="closeConfigPopup()">Close</button>
+        </div>    
     </div>
 
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const deviceName = document.getElementById('deviceName');
-            const modelPath = document.getElementById('modelPath');
-            const modelInput = document.getElementById('modelInput');
-            const deviceChoice = document.getElementById('deviceChoice');
-
-            // Simulate loading device information
-            deviceName.textContent = "CUDA 0";
-            modelInput.textContent = "N/A";
-
-            // Handle model file selection
-            function handleFileSelect(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    modelPath.textContent = file.name;
-                } else {
-                    modelPath.textContent = "No file selected";
-                }
-            }
-
-            // Handle model upload (dummy function for illustration)
-            function uploadModel() {
-                const fileInput = document.getElementById('modelFile');
-                const file = fileInput.files[0];
-                if (file) {
-                    alert(`Uploading model: ${file.name}`);
-                    // Here you would handle the actual upload process, e.g., sending the file to a server
-                    modelInput.textContent = "Model successfully uploaded!";
-                } else {
-                    alert("Please select a model file to upload.");
-                }
-            }
-
-            // Assign functions to window scope for access
-            window.handleFileSelect = handleFileSelect;
-            window.uploadModel = uploadModel;
-
-            // Load model based on device choice (dummy function)
-            window.loadModel = function() {
-                const device = deviceChoice.value;
-                if (device === "null") {
-                    deviceName.textContent = "CUDA 0";
-                } else if (device === "0") {
-                    deviceName.textContent = "CUDA 1";
-                } else {
-                    deviceName.textContent = "CPU";
-                }
-            };
-        });
-
-        loadModel();
-    </script>
     <div class="container mt-5">
         <h1>CardioWatch Infant</h1>
         <p>Klasifikasi abnormalitas jantung anak dengan cepat dan lengkap!</p>
 
+        <div class="info-container">
+            <div><span class="info-title">Model Path:</span> {{ model_path }}</div>
+            <div><span class="info-title">Device:</span> {{ device }}</div>
+        </div>
+
         <form id="uploadForm" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="fileInput" class="form-label">Upload Gambar/Video</label>
+            <div class="file-input-wrapper">
                 <input class="form-control" type="file" id="fileInput" accept="image/*,video/*" multiple>
+                <label class="file-input-label" for="fileInput">Tambahkan Gambar/Video Disini!</label>
             </div>
-            <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
+            <button type="submit" class="btn-upload" id="uploadButton">Upload</button>
         </form>
 
         <div id="fileList" class="mt-3"></div>
+        <br>
+        <br>
     </div>
-    
 
     <script src="static/js/script.js"></script>
     <script src="static/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <script>
-
-
-        
-        <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="infoModalLabel">Device and Model Information</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Device Used:</strong> <span id="deviceInfo">Loading...</span></p>
-                        <p><strong>Input Model:</strong> <span id="modelPathInfo">Loading...</span></p>
-                    <div class="mb-3">
-                        <label for="modelInput" class="form-label"><strong>Upload Model (.pt):</strong></label>
-                        <input type="file" class="form-control" id="modelInput" accept=".pt"/>
-                    </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        // JavaScript function to load model information
-        function loadModel(choiceUser = null, modelPath = "models/default/best.pt") {
-            let deviceName = "cpu"; // Default device name
-
-            if (choiceUser === null) {
-                if (isCudaAvailable()) {
-                    console.log("Prediction Using CUDA!");
-                    deviceName = "0";
-                } else {
-                    console.log("Prediction Using CPU!");
-                    deviceName = "cpu";
-                }
-            } else {
-                console.log(`Prediction Using CUDA: ${choiceUser}`);
-                deviceName = choiceUser;
-            }
-// Simulate model loading
-const modelLoaded = simulateModelLoading(modelPath);
-
-// Update modal content
-document.getElementById('deviceInfo').textContent = deviceName === "cpu" ? "CPU" : `GPU ${deviceName}`;
-document.getElementById('modelPathInfo').textContent = modelLoaded ? modelPath : "Failed to load model";
-}
-
-// Simulate CUDA availability check
-function isCudaAvailable() {
-return Math.random() > 0.5; // Randomly simulate CUDA being available
-}
-
-// Simulate model loading and return success or failure
-function simulateModelLoading(modelPath) {
-try {
-    // Simulate loading a model file (e.g., using AJAX or API call in a real scenario)
-    console.log(`Model successfully loaded from ${modelPath}`);
-    return true;
-} catch (e) {
-    console.log(`Failed to load model from ${modelPath}: ${e}`);
-    return false;
-}
-}
-
-// Initial model info load
-loadModel();
-        
-        // JavaScript to update the model path info when a file is selected
-        document.getElementById('modelInput').addEventListener('change', function(event) {
-            const fileName = event.target.files[0] ? event.target.files[0].name : 'No file selected';
-            document.getElementById('modelPathInfo').innerText = fileName;
-        });
-
-        // Example JavaScript to load device information
-        document.addEventListener('DOMContentLoaded', () => {
-            const deviceInfoElement = document.getElementById('deviceInfo');
-            // Simulate fetching device information
-            deviceInfoElement.innerText = 'Device Model XYZ'; // Replace this with actual device information
-        });
-
-
-
-    </script>
 </body>
 </html>

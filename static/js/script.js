@@ -1,36 +1,26 @@
-// document.getElementById('uploadForm').addEventListener('submit', function(event) {
-//     event.preventDefault();
-//     var uploadButton = document.getElementById('uploadButton');
-//     uploadButton.innerHTML = 'Uploading...';
-//     uploadButton.disabled = true;
-
-//     const fileInput = document.getElementById('fileInput');
-//     const formData = new FormData();
-//     Array.from(fileInput.files).forEach(file => {
-//         formData.append('files', file);
-//     });
-
-//     fetch('/upload', {
-//         method: 'POST',
-//         body: formData
-//     }).then(response => response.text())
-//       .then(data => {
-//         document.body.innerHTML = data;
-//     }).catch(error => console.error('Error:', error));
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     const uploadForm = document.getElementById('uploadForm');
     const uploadButton = document.getElementById('uploadButton');
 
-    // Display file previews and info
-    fileInput.addEventListener('change', () => {
+    // Function to update the file list and handle layout
+    function updateFileList() {
         fileList.innerHTML = '';
-        Array.from(fileInput.files).forEach((file, index) => {
+        const files = Array.from(fileInput.files);
+        
+        // Handle layout based on the number of files
+        if (files.length === 1) {
+            fileList.classList.remove('grid-layout');
+            fileList.classList.add('single-media-container');
+        } else {
+            fileList.classList.add('grid-layout');
+            fileList.classList.remove('single-media-container');
+        }
+
+        files.forEach((file, index) => {
             const listItem = document.createElement('div');
-            listItem.classList.add('file-list-item', 'd-flex', 'align-items-center', 'mb-2');
+            listItem.classList.add('file-list-item');
             listItem.setAttribute('data-file-index', index);  // Set index for file identification
 
             let preview;
@@ -40,10 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 preview.classList.add('file-preview');
                 preview.alt = file.name;
             } else if (file.type.startsWith('video/')) {
-                preview = document.createElement('video');
-                preview.src = URL.createObjectURL(file);
+                preview = document.createElement('img');
+                preview.src = 'static/images/video-upload.png'; // Use image preview for videos
                 preview.classList.add('file-preview');
-                preview.controls = true;
+                preview.alt = 'Video preview';
             }
 
             const info = document.createElement('div');
@@ -61,9 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fileList.appendChild(listItem);
         });
-    });
+    }
 
-    // Remove file from the file list and input
+    // Add event listener for file input change
+    fileInput.addEventListener('change', updateFileList);
+
+    // Function to remove a file
     function removeFile(index) {
         // Remove file from the input
         const dataTransfer = new DataTransfer();
@@ -74,12 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         fileInput.files = dataTransfer.files;
 
-        // Remove the file from the list
-        const listItem = fileList.querySelector(`[data-file-index="${index}"]`);
-        if (listItem) {
-            listItem.remove();
-        }
+        // Update the file list
+        updateFileList();
     }
+
 
     // Show SweetAlert2 alert with dynamic content
     async function showAlert({ title, text, icon, showConfirmButton, backdrop }) {
@@ -163,13 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleHomeButtonClick() {
-    var uploadButton = document.getElementById('uploadButton');
-    if (uploadButton) {
-        uploadButton.textContent = 'Uploading...';
-        uploadButton.disabled = true;
+    var homeButton = document.getElementById('homeButton');
+    if (homeButton) {
+        homeButton.textContent = 'Returning...';
+        homeButton.disabled = true;
     }
 
-    var items = document.querySelectorAll('#fileList .list-group-item');
+    var items = document.querySelectorAll('#fileList .grid-item');
     console.log("List items found:", items);
 
     var filenames = Array.from(items).map(item => item.getAttribute('data-filename'));
@@ -194,9 +185,123 @@ function handleHomeButtonClick() {
     .catch(error => console.error('Error:', error));
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    var homeButton = document.getElementById('homeButton');
-    if (homeButton) {
-        homeButton.addEventListener('click', handleHomeButtonClick);
+async function initializeResultPage() {
+    try {
+        var homeButton = document.getElementById('homeButton');
+        if (homeButton) {
+            homeButton.addEventListener('click', handleHomeButtonClick);
+        }
+
+        var fileList = document.getElementById('fileList');
+        // console.log("Berapo? ", document.getElementById('fileList').querySelectorAll('.grid-item').length);
+        if (fileList) {
+            var items = fileList.querySelectorAll('.grid-item');
+            // console.log(items.length);  // Log the number of grid items
+            if (items.length > 1) {
+                fileList.classList.add('grid-layout-2');
+            } else {
+                fileList.classList.add('grid-layout-1');
+            }
+        }
+
+        var captions = document.querySelectorAll('.result-captions');
+        captions.forEach(function(caption) {
+            if (caption.children.length === 4) {
+                caption.classList.add('double-row');
+            } else if (caption.children.length === 3) {
+                caption.classList.add('single-row');
+            }
+        });
+
+    } catch (error) {
+        console.error('Error initializing result page:', error);
     }
+}
+
+// Function to continuously call initializeResultPage
+function startPeriodicInitialization(interval) {
+    initializeResultPage(); // Call once initially
+    setInterval(initializeResultPage, interval); // Call repeatedly at specified interval
+}
+
+// Call the function when the DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    startPeriodicInitialization(1000);
 });
+
+function openConfigPopup() {
+    document.getElementById('configPopup').style.display = 'block';
+    document.getElementById('blurredBackground').style.display = 'block';
+}
+
+function closeConfigPopup() {
+    document.getElementById('configPopup').style.display = 'none';
+    document.getElementById('blurredBackground').style.display = 'none';
+}
+
+function saveConfig() {
+    const deviceSelect = document.getElementById('deviceSelect');
+    const deviceType = deviceSelect.value;
+    console.log('Device type:', deviceType);
+
+    fetch('/update_config', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ device_type: deviceType })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert('Configuration updated successfully');
+            closeConfigPopup();
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the configuration.');
+    });
+}
+
+
+function uploadModel() {
+    const modelFile = document.getElementById('modelFile').files[0];
+    if (!modelFile) {
+        alert('No file selected.');
+        return;
+    }
+
+    const fileExtension = modelFile.name.split('.').pop();
+
+    if (fileExtension !== 'pt') {
+        alert('Please upload a file with the .pt extension only.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('model_file', modelFile);
+
+    console.log('Uploading model...');
+    fetch('/upload_model', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert('Model uploaded and loaded successfully');
+            closeConfigPopup();
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while uploading the model.');
+    });
+}

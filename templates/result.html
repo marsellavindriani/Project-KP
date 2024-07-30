@@ -2,57 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="static\favicon.ico">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classification of Infant Heart Abnormalities - Hasil Upload</title>
-    
-    <link rel="stylesheet" href="static/css/style.css">
-    <link href="static/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="static/css/style-result.css">
 </head>
 <body>
     <div class="container mt-5">
         <h1>CardioWatch Infant</h1>
         <p>Hasil klasifikasi abnormalitas jantung anak</p>
-        <a class="btn btn-primary mb-3" href="/">Home</a>
+        <button class="btn btn-primary mb-3" onclick="handleHomeButtonClick()" id="homeButton">Home</button>
 
-        <div id="uploadedFiles" class="mt-4 result">
-            <div id="fileList" class="list-group">
+        <div id="uploadedFiles" class="mt-4">
+            <div id="fileList" class="grid-layout">
                 {% for path, result in results.image.items() %}
-                <div class="list-group-item" data-filename="{{ path.split('/')[-1].split('\\')[-1] }}">
-                    <h5 class="mb-1 result-file-name">File {{ path.split('/')[-1].split('\\')[-1] }} Selesai Diproses!</h5>
+                <div class="grid-item" data-filename="{{ path.split('/')[-1].split('\\')[-1] }}">
+                    <h5 class="mb-1 result-file-name">Gambar {{ path.split('/')[-1].split('\\')[-1] }}</h5>
                     <div class="result-container">
                         <img src="{{ path }}" class="img-fluid result-figure" alt="Processed Image">
-                        <div class="result-captions">
-                            <p>Prediction: {{ result.prediction }}</p>
-                            <p>Probability: {{ result.probability }}%</p>
-                            <p>Abnormal: {{ result.abnormal }}</p>
-                            <p>Normal: {{ result.normal }}</p>
+                        <div class="result-captions image-captions">
+                            <div class="caption-item">Prediction: {{ result.prediction }}</div>
+                            <div class="caption-item">Probability: {{ result.probability }}%</div>
+                            <div class="caption-item">Abnormal: {{ result.abnormal }}</div>
+                            <div class="caption-item">Normal: {{ result.normal }}</div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
                 {% for path, result in results.video.items() %}
-                <div class="list-group-item" data-filename="{{ path.split('/')[-1].split('\\')[-1] }}">
-                    <h5 class="mb-1 result-file-name">File {{ path.split('/')[-1].split('\\')[-1] }} Selesai Diproses!</h5>
+                <div class="grid-item" data-filename="{{ path.split('/')[-1].split('\\')[-1] }}">
+                    <h5 class="mb-1 result-file-name">Video {{ path.split('/')[-1].split('\\')[-1] }}</h5>
                     <div class="result-container">
                         <video class="img-fluid result-figure" controls autoplay loop>
                             <source src="{{ result.pathVid }}" type="video/mp4">
                             Video tidak dapat diputar
                         </video>
-                        <div class="result-captions">
-                            <p>Prediction: {{ result.prediction }}</p>
-                            <p>Abnormal: {{ result.abnormal }}</p>
-                            <p>Normal: {{ result.normal }}</p>
+                        <div class="result-captions video-captions">
+                            <div class="caption-item full-width">Prediction: {{ result.prediction }}</div>
+                            <div class="caption-item">Abnormal: {{ result.abnormal }}</div>
+                            <div class="caption-item">Normal: {{ result.normal }}</div>
                         </div>
                     </div>
-                    
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-
-    <script src="static\js\script.js"></script>
-    <script src="static\js\bootstrap.bundle.js"></script>
+    <br>
+    <br>
+    
+    <script src="static/js/script.js"></script>
 </body>
 </html>

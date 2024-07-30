@@ -1,0 +1,93 @@
+html, body {
+    overflow-y: auto;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    /* Set the gradient background with smooth transitions */
+    background: linear-gradient(to bottom, 
+        #E41616 0%, 
+        #F67618 33%, 
+        #FFAA2B 66%, 
+        #FFEB34 100%
+    );
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    position: relative;
+}
+
+.container {
+    color: white;
+    text-align: center;
+}
+
+.list-group-item {
+    border-radius: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.single-media-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.result-file-name{
+    color:rgb(21, 21, 21);
+}
+
+.grid-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    color:rgb(21, 21, 21);
+}
+
+.grid-layout {
+    display: grid;
+    gap: 15px;
+}
+
+.grid-layout-1 {
+    grid-template-columns: 1fr;
+}
+
+.grid-layout-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.result-captions.image-captions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    color:rgb(21, 21, 21);
+}
+
+.result-captions.video-captions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px;
+    color:rgb(21, 21, 21);
+}
+
+.result-captions.video-captions .full-width {
+    grid-column: 1 / 3;
+}
+
+.caption-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}

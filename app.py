@@ -1,3 +1,4 @@
+
 import os
 import cv2
 import torch
@@ -6,82 +7,64 @@ from ultralytics import YOLO
 from moviepy.editor import VideoFileClip
 from flask import Flask, render_template, request, send_from_directory, jsonify
 
+DEFAULT_MODEL_PATH = 'models/default/best.pt'
+current_model_path = DEFAULT_MODEL_PATH
+
+DEFAULT_DEVICE = 'cpu'
+current_device = DEFAULT_DEVICE
+
 app = Flask(__name__)
 model = None
 
-# def loadModel(pilihanUser):
-#     global model
-#     deviceName = "cpu"
-#     if pilihanUser is None:
-#         if torch.cuda.is_available():
-#             os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-#             print("Prediksi Menggunakan CUDA!")
-#             deviceName = "0"
-#         else:
-#             print("Prediksi Menggunakan CPU!")
-#         model = YOLO(r"models\default\best.pt")
-#     else:
-#         print(f"Prediksi Menggunakan CUDA: {pilihanUser}")
-#         os.environ["CUDA_VISIBLE_DEVICES"] = str(pilihanUser)
-#         model = YOLO(r"models\default\best.pt")
-#         deviceName = str(pilihanUser)
-#     model.fuse()
-#     ultralytics.checks(device=deviceName)
-
-def loadModel(choiceUser=None, modelPath="models/default/best.pt"):
-    """
-    Loads a YOLO model using the specified device and model path.
-
-    Parameters:
-        choiceUser (str, optional): The user's choice of GPU. Use None for automatic selection.
-        modelPath (str): The path to the model file (.pt format).
-    """
-    global model
-    deviceName = "cpu"  # Default to CPU
-
-    print(f"USINGG {choiceUser}")
-
-    # Check for user choice or automatic device selection
-    if choiceUser is None:
-        if torch.cuda.is_available():
-            os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-            print("Prediction Using CUDA!")
-            deviceName = "0"
-        else:
-            print("Prediction Using CPU!")
-    else:
-        print(f"Prediction Using CUDA: {choiceUser}")
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(choiceUser)
-        deviceName = str(choiceUser)
-
-    # Load the model with the specified path
-    try:
-        model = YOLO(modelPath)
-        print(f"Model loaded successfully from {modelPath}")
-    except Exception as e:
-        print(f"Failed to load model from {modelPath}: {e}")
-        return
-
-    # Perform additional model setup
-    model.fuse()  # Optimize model for inference
-    ultralytics.checks(device=deviceName)  # Check device compatibility
-
-    # Output model details
-    print(f"Using device: {deviceName}")
-    print(f"Model path: {modelPath}")
-    print(f"Model input: {modelPath.split('/')[-1]}")
-
-
-
-
+deviceCount = torch.cuda.device_count() if torch.cuda.is_available() else 0
+if deviceCount > 0:
+    deviceCount += 1
 
 names = {0: 'Abnormal', 1: 'Normal'}
 UPLOAD_FOLDER = 'temp-media'
+UPLOAD_MODEL = 'models'
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+if not os.path.exists(UPLOAD_MODEL):
+    os.makedirs(UPLOAD_MODEL)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_MODEL'] = UPLOAD_MODEL
+
+
+def loadModel(choiceUser=None, modelPath="models/default/best.pt", initModel=False):
+    global current_device
+    deviceName = "cpu"  # Defaultnya CPU
+
+    if choiceUser is None:
+        if torch.cuda.is_available():
+            os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+            deviceName = "cuda:0"
+        else:
+            deviceName = "cpu"
+    else:
+        if choiceUser == "cpu":
+            deviceName = "cpu"
+        elif torch.cuda.is_available():
+            deviceUse = int(choiceUser.split(':')[-1])
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(deviceUse)
+            deviceName = f"cuda:{deviceUse}"
+        else:
+            deviceName = "cpu"
+
+    try:
+        model = YOLO(modelPath)
+        model = model.to(deviceName)
+        model.fuse()
+        ultralytics.checks(device=deviceName)
+        if initModel:
+            current_device = deviceName
+        return model
+    except Exception as e:
+        print(f"Failed to load model from {modelPath}: {e}")
+        return None
 
 
 def imageORvideo(path):
@@ -157,14 +140,9 @@ def get_prediction(paths):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    print(f"Current model path: {current_model_path}")
+    return render_template('index.html', device_count=deviceCount, device=current_device.upper(), model_path=current_model_path)
 
-@app.route('/load-model/<choiceUser>')
-def load_model(choiceUser):
-    # return render_template('index.html')
-    choiceUser = None if choiceUser == "null" else choiceUser
-    loadModel(choiceUser)
-    
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -182,7 +160,6 @@ def upload_files():
 
     print(f"Files {paths} berhasil diupload")
     results = get_prediction(paths)
-    print(results)
     return render_template('result.html', results=results)
 
 
@@ -228,6 +205,41 @@ def delete_files():
     return jsonify({'success': success})
 
 
+@app.route('/update_config', methods=['POST'])
+def update_config():
+    global current_model_path, model, current_device
+    data = request.json
+    current_device = data.get('device_type', 'cpu')
+
+    print(f"Memuat model {current_model_path} dengan device: {current_device}")
+    try:
+        model = loadModel(choiceUser=current_device, modelPath=current_model_path)
+    except:
+        return jsonify({'error': 'Invalid CUDA device index'}), 400
+
+    return jsonify({'message': 'Device updated successfully', 'device': str(current_device)})
+
+
+@app.route('/upload_model', methods=['POST'])
+def upload_model():
+    global current_model_path, current_device, model
+    if 'model_file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['model_file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if file:
+        model_path = os.path.join(app.config['UPLOAD_MODEL'], file.filename)
+        file.save(model_path)
+        uploaded_model = loadModel(choiceUser=current_device, modelPath=model_path)
+        if uploaded_model:
+            model = uploaded_model
+            current_model_path = model_path
+            return jsonify({'message': 'Model uploaded and loaded successfully', 'model_path': current_model_path})
+        else:
+            return jsonify({'error': 'Failed to load uploaded model'}), 400
+
+
 if __name__ == '__main__':
-    loadModel(0)
+    model = loadModel(initModel=True)
     app.run(debug=True)
