@@ -17,8 +17,8 @@ app = Flask(__name__)
 model = None
 
 deviceCount = torch.cuda.device_count() if torch.cuda.is_available() else 0
-if deviceCount > 0:
-    deviceCount += 1
+# if deviceCount > 0:
+#     deviceCount += 1
 
 names = {0: 'Abnormal', 1: 'Normal'}
 UPLOAD_FOLDER = 'temp-media'
