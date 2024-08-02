@@ -193,7 +193,7 @@ async function initializeResultPage() {
         }
 
         var fileList = document.getElementById('fileList');
-        // console.log("Berapo? ", document.getElementById('fileList').querySelectorAll('.grid-item').length);
+        console.log("Berapo? ", document.getElementById('fileList').querySelectorAll('.grid-item').length);
         if (fileList) {
             var items = fileList.querySelectorAll('.grid-item');
             // console.log(items.length);  // Log the number of grid items

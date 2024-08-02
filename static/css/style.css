@@ -197,10 +197,11 @@ flex-grow: 1;
     margin-top: 10px;
     padding: 10px 20px;
     font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
+    background-color: #FFEB34;
+    color: #E41616;
     border: none;
-    border-radius: 5px;
+    border-radius: 13px;
+    font-weight: bold;
     cursor: pointer;
 }
 
